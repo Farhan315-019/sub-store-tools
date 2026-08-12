@@ -26,9 +26,11 @@ export async function sendWhatsAppText(to: string, text: string): Promise<boolea
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ to, text }),
+      body: JSON.stringify({ to, body: text }),
     });
-    return response.ok;
+    if (!response.ok) return false;
+    const data = (await response.json().catch(() => null)) as { sent?: boolean } | null;
+    return data?.sent !== false;
   } catch {
     return false;
   }
