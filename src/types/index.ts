@@ -61,6 +61,7 @@ export type Testimonial = {
   product: string;
   verified: boolean;
   avatar: string;
+  date: string;
 };
 
 export type DashboardOrder = {

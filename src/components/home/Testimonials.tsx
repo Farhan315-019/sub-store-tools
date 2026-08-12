@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { BadgeCheck, Star } from "lucide-react";
+import { BadgeCheck, Quote, Star } from "lucide-react";
 import { testimonials } from "@/data/testimonials";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { cn } from "@/lib/utils";
@@ -24,17 +24,19 @@ function Stars({ rating, className }: { rating: number; className?: string }) {
 export function Testimonials() {
   return (
     <section className="container-x py-20 sm:py-24">
-      <SectionHeading
-        eyebrow="Reviews"
-        title="Trusted by Customers Every Day"
-        subtitle="Real feedback from people who order from us on a regular basis."
-      />
-
-      <div className="mx-auto mt-8 flex max-w-md items-center justify-center gap-4 rounded-card-lg border border-border bg-surface px-6 py-4">
-        <p className="text-4xl font-bold text-foreground">4.9</p>
-        <div>
-          <Stars rating={5} />
-          <p className="mt-1 text-sm text-muted">Based on 120+ verified reviews</p>
+      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <SectionHeading
+          align="left"
+          eyebrow="Customer Reviews"
+          title="What Our Customers Say"
+          subtitle="Real feedback from people who order from us on a regular basis."
+        />
+        <div className="flex shrink-0 items-center gap-4 rounded-card-lg border border-border bg-surface px-5 py-3.5">
+          <p className="text-4xl font-extrabold leading-none text-accent-text">4.9</p>
+          <div>
+            <Stars rating={5} />
+            <p className="mt-1.5 text-xs text-muted">120+ verified reviews</p>
+          </div>
         </div>
       </div>
 
@@ -42,40 +44,46 @@ export function Testimonials() {
         {testimonials.map((testimonial) => (
           <figure
             key={testimonial.name}
-            className="flex h-full flex-col rounded-card-lg border border-border bg-surface p-6"
+            className="relative flex h-full flex-col overflow-hidden rounded-card-lg border border-border bg-surface p-6 transition-colors hover:border-accent/40"
           >
-            <div className="flex items-center justify-between">
+            <span
+              className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-accent to-accent-strong"
+              aria-hidden="true"
+            />
+            <div className="flex items-center gap-3">
+              <span className="relative size-11 shrink-0 overflow-hidden rounded-full border border-border bg-surface-2">
+                <Image
+                  src={testimonial.avatar}
+                  alt={`${testimonial.name} avatar`}
+                  fill
+                  sizes="44px"
+                  unoptimized
+                  className="object-cover"
+                />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="flex items-center gap-1 truncate text-sm font-semibold text-foreground">
+                  {testimonial.name}
+                  <BadgeCheck className="size-4 shrink-0 text-accent-text" aria-hidden="true" />
+                </p>
+                <p className="truncate text-xs text-muted">{testimonial.date}</p>
+              </div>
+              <Quote className="size-5 shrink-0 text-border" aria-hidden="true" />
+            </div>
+            <div className="mt-4 flex items-center justify-between">
               <Stars rating={testimonial.rating} />
-              <span className="flex items-center gap-1 text-xs font-medium text-success">
-                <BadgeCheck className="size-4" aria-hidden="true" />
+              <span className="text-[0.65rem] font-semibold uppercase tracking-wide text-success">
                 Verified
               </span>
             </div>
-            <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-muted">
+            <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-muted">
               &ldquo;{testimonial.quote}&rdquo;
             </blockquote>
-            <figcaption className="mt-5 border-t border-border pt-4">
-              <div className="flex items-center gap-3">
-                <span className="relative size-10 shrink-0 overflow-hidden rounded-full border border-border bg-surface-2">
-                  <Image
-                    src={testimonial.avatar}
-                    alt={`${testimonial.name} avatar`}
-                    fill
-                    sizes="40px"
-                    unoptimized
-                    className="object-cover"
-                  />
-                </span>
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-foreground">
-                    {testimonial.name}
-                  </p>
-                  <p className="truncate text-xs text-muted">{testimonial.role}</p>
-                </div>
-              </div>
-              <span className="mt-3 inline-block rounded-full bg-surface-2 px-2.5 py-1 text-xs font-medium text-muted">
+            <figcaption className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3.5">
+              <span className="rounded-full bg-surface-2 px-2.5 py-1 text-[0.7rem] font-medium text-muted">
                 {testimonial.product}
               </span>
+              <span className="text-[0.7rem] text-muted-2">{testimonial.role}</span>
             </figcaption>
           </figure>
         ))}

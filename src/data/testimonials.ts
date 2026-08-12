@@ -1,4 +1,4 @@
-import type { Testimonial } from "@/types";
+﻿import type { Testimonial } from "@/types";
 
 const avatar = (seed: string) =>
   `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed.replace(/\s+/g, "_")}`;
@@ -13,6 +13,7 @@ export const testimonials: Testimonial[] = [
     product: "Netflix Premium",
     verified: true,
     avatar: avatar("Ahmed Raza"),
+    date: "2 days ago",
   },
   {
     name: "Sana Malik",
@@ -23,6 +24,7 @@ export const testimonials: Testimonial[] = [
     product: "Reseller Program",
     verified: true,
     avatar: avatar("Sana Malik"),
+    date: "1 week ago",
   },
   {
     name: "Bilal Hussain",
@@ -33,6 +35,7 @@ export const testimonials: Testimonial[] = [
     product: "YouTube Premium",
     verified: true,
     avatar: avatar("Bilal Hussain"),
+    date: "2 weeks ago",
   },
   {
     name: "Fatima Noor",
@@ -43,6 +46,7 @@ export const testimonials: Testimonial[] = [
     product: "ChatGPT Plus",
     verified: true,
     avatar: avatar("Fatima Noor"),
+    date: "3 weeks ago",
   },
   {
     name: "Usman Tariq",
@@ -53,6 +57,7 @@ export const testimonials: Testimonial[] = [
     product: "CapCut Pro",
     verified: true,
     avatar: avatar("Usman Tariq"),
+    date: "1 month ago",
   },
   {
     name: "Ayesha Khan",
@@ -63,6 +68,7 @@ export const testimonials: Testimonial[] = [
     product: "Spotify Premium",
     verified: true,
     avatar: avatar("Ayesha Khan"),
+    date: "1 month ago",
   },
   {
     name: "Hamza Sheikh",
@@ -73,6 +79,7 @@ export const testimonials: Testimonial[] = [
     product: "NordVPN",
     verified: true,
     avatar: avatar("Hamza Sheikh"),
+    date: "2 months ago",
   },
   {
     name: "Mariam Javed",
@@ -83,6 +90,7 @@ export const testimonials: Testimonial[] = [
     product: "InVideo Pro",
     verified: true,
     avatar: avatar("Mariam Javed"),
+    date: "2 months ago",
   },
   {
     name: "Zainab Ali",
@@ -93,6 +101,7 @@ export const testimonials: Testimonial[] = [
     product: "Grammarly Premium",
     verified: true,
     avatar: avatar("Zainab Ali"),
+    date: "3 months ago",
   },
   {
     name: "Ali Ahmed",
@@ -103,6 +112,7 @@ export const testimonials: Testimonial[] = [
     product: "Crunchyroll",
     verified: true,
     avatar: avatar("Ali Ahmed"),
+    date: "3 months ago",
   },
   {
     name: "Hira Shahid",
@@ -113,6 +123,7 @@ export const testimonials: Testimonial[] = [
     product: "Canva Pro",
     verified: true,
     avatar: avatar("Hira Shahid"),
+    date: "4 months ago",
   },
   {
     name: "Danish Iqbal",
@@ -123,5 +134,6 @@ export const testimonials: Testimonial[] = [
     product: "ExpressVPN",
     verified: true,
     avatar: avatar("Danish Iqbal"),
+    date: "5 months ago",
   },
 ];
