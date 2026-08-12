@@ -1,24 +1,9 @@
+import Image from "next/image";
 import { BadgeCheck, Star } from "lucide-react";
 import { testimonials } from "@/data/testimonials";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/utils";
-
-const avatarTones = [
-  "bg-accent-soft text-accent-text",
-  "bg-info/10 text-info",
-  "bg-success/10 text-success",
-  "bg-warning/10 text-warning",
-];
-
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
 function Stars({ rating, className }: { rating: number; className?: string }) {
   return (
@@ -70,14 +55,15 @@ export function Testimonials() {
               </blockquote>
               <figcaption className="mt-5 border-t border-border pt-4">
                 <div className="flex items-center gap-3">
-                  <span
-                    className={cn(
-                      "flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-                      avatarTones[index % avatarTones.length]
-                    )}
-                    aria-hidden="true"
-                  >
-                    {initials(testimonial.name)}
+                  <span className="relative size-10 shrink-0 overflow-hidden rounded-full border border-border bg-surface-2">
+                    <Image
+                      src={testimonial.avatar}
+                      alt={`${testimonial.name} avatar`}
+                      fill
+                      sizes="40px"
+                      unoptimized
+                      className="object-cover"
+                    />
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-foreground">
