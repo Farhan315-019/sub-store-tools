@@ -15,7 +15,7 @@ export function PopularProducts() {
           title="Popular Products"
           subtitle="The services our customers order most — fast-moving, in-demand and ready when you are."
         />
-        <div className="mt-12 grid grid-cols-3 gap-3 sm:gap-5">
+        <div className="mt-12 grid grid-cols-3 gap-2 sm:gap-3 lg:gap-5">
           {products.map((product, index) => (
             <Reveal key={product.id} delay={Math.min(index * 0.05, 0.3)} className="h-full">
               <ProductCard product={product} />

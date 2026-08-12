@@ -76,7 +76,7 @@ export function OverviewPanel() {
 
       <div>
         <h2 className="mb-4 font-display text-base font-bold text-foreground">Popular Reseller Products</h2>
-        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {popular.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
