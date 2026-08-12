@@ -54,9 +54,12 @@ export type FaqItem = {
 };
 
 export type Testimonial = {
-  quote: string;
-  label: string;
+  name: string;
   role: string;
+  quote: string;
+  rating: number;
+  product: string;
+  verified: boolean;
 };
 
 export type DashboardOrder = {
