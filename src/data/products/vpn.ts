@@ -1,0 +1,132 @@
+import type { Product } from "@/types";
+import { singlePlan } from "./plans";
+
+export const vpnProducts: Product[] = [
+  {
+    id: "nordvpn",
+    slug: "nordvpn",
+    name: "NordVPN",
+    category: "VPN & Proxy",
+    categorySlug: "vpn-proxy",
+    shortDescription: "Secure and private browsing with a globally trusted VPN service.",
+    description:
+      "NordVPN provides strong encryption, thousands of global servers and a strict no-logs policy, keeping your browsing private and secure.",
+    features: [
+      "Thousands of servers worldwide",
+      "Strong encryption and no-logs policy",
+      "Fast, stable connections",
+      "Apps for all major devices",
+      "Blocks ads and trackers",
+    ],
+    plans: singlePlan(600),
+    featured: true,
+    popular: true,
+    status: "available",
+    badge: "Best Seller",
+    deliveryTime: "Within a few hours of order confirmation",
+    seoTitle: "NordVPN Subscription | Secure & Private Browsing — Sub Store Tools",
+    seoDescription:
+      "NordVPN subscriptions with fast delivery. Browse securely and privately with a globally trusted VPN service.",
+  },
+  {
+    id: "surfshark",
+    slug: "surfshark",
+    name: "Surfshark",
+    category: "VPN & Proxy",
+    categorySlug: "vpn-proxy",
+    shortDescription: "Unlimited devices, strong privacy and a simple, powerful VPN experience.",
+    description:
+      "Surfshark offers unlimited simultaneous connections, strong privacy protections and a clean, fast experience across every device.",
+    features: [
+      "Unlimited simultaneous devices",
+      "Strong privacy protections",
+      "Global server network",
+      "Fast connections",
+      "Multi-platform support",
+    ],
+    plans: singlePlan(600),
+    featured: true,
+    popular: false,
+    status: "available",
+    badge: "Hot Deal",
+    deliveryTime: "Within a few hours of order confirmation",
+    seoTitle: "Surfshark Subscription | Unlimited Devices VPN — Sub Store Tools",
+    seoDescription:
+      "Surfshark subscriptions with fast delivery. Protect unlimited devices with strong privacy and fast connections.",
+  },
+  {
+    id: "expressvpn",
+    slug: "expressvpn",
+    name: "ExpressVPN",
+    category: "VPN & Proxy",
+    categorySlug: "vpn-proxy",
+    shortDescription: "High-speed, secure VPN with a proven track record and easy setup.",
+    description:
+      "ExpressVPN is known for its high-speed servers, strong security and effortless setup, making it a dependable choice for private browsing.",
+    features: [
+      "High-speed global servers",
+      "Strong security and privacy",
+      "Easy one-click setup",
+      "Apps for every platform",
+      "24/7 support",
+    ],
+    plans: singlePlan(600),
+    featured: false,
+    popular: false,
+    status: "available",
+    deliveryTime: "Within a few hours of order confirmation",
+    seoTitle: "ExpressVPN Subscription | High-Speed Secure VPN — Sub Store Tools",
+    seoDescription:
+      "ExpressVPN subscriptions with fast delivery. Enjoy high-speed, secure browsing with a proven VPN service.",
+  },
+  {
+    id: "protonvpn",
+    slug: "protonvpn",
+    name: "ProtonVPN",
+    category: "VPN & Proxy",
+    categorySlug: "vpn-proxy",
+    shortDescription: "Privacy-first VPN from the team behind Proton Mail, built on open source.",
+    description:
+      "ProtonVPN is a privacy-first VPN from the makers of Proton Mail, offering strong encryption, a no-logs policy and open-source apps.",
+    features: [
+      "Privacy-first approach",
+      "No-logs policy",
+      "Open-source apps",
+      "Strong encryption",
+      "Secure global servers",
+    ],
+    plans: singlePlan(600),
+    featured: false,
+    popular: false,
+    status: "available",
+    deliveryTime: "Within a few hours of order confirmation",
+    seoTitle: "ProtonVPN Subscription | Privacy-First VPN — Sub Store Tools",
+    seoDescription:
+      "ProtonVPN subscriptions with fast delivery. Protect your privacy with strong encryption and a no-logs policy.",
+  },
+  {
+    id: "cyberghost-vpn",
+    slug: "cyberghost-vpn",
+    name: "CyberGhost VPN",
+    category: "VPN & Proxy",
+    categorySlug: "vpn-proxy",
+    shortDescription: "User-friendly VPN with optimised servers for streaming and browsing.",
+    description:
+      "CyberGhost VPN combines ease of use with optimised servers for streaming and everyday browsing, backed by strong privacy protections.",
+    features: [
+      "Optimised servers for streaming",
+      "User-friendly apps",
+      "Strong privacy protections",
+      "Global server network",
+      "Multi-device support",
+    ],
+    plans: singlePlan(600),
+    featured: false,
+    popular: false,
+    status: "available",
+    deliveryTime: "Within a few hours of order confirmation",
+    seoTitle: "CyberGhost VPN Subscription | Optimised Streaming VPN — Sub Store Tools",
+    seoDescription:
+      "CyberGhost VPN subscriptions with fast delivery. Stream and browse with optimised servers and strong privacy.",
+  },
+];

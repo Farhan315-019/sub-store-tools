@@ -1,0 +1,80 @@
+import type { DashboardOrder, DashboardTransaction } from "@/types";
+
+export const mockDashboard = {
+  walletBalance: 125.5,
+  totalOrders: 24,
+  pendingOrders: 3,
+  completedOrders: 21,
+  orders: [
+    {
+      id: "SST-1042",
+      product: "Netflix",
+      plan: "3 Months",
+      date: "Aug 10, 2026",
+      status: "completed",
+      amount: 13,
+    },
+    {
+      id: "SST-1041",
+      product: "Canva",
+      plan: "6 Months",
+      date: "Aug 09, 2026",
+      status: "processing",
+      amount: 19,
+    },
+    {
+      id: "SST-1040",
+      product: "ChatGPT Plus",
+      plan: "1 Month",
+      date: "Aug 08, 2026",
+      status: "pending",
+      amount: 12,
+    },
+    {
+      id: "SST-1039",
+      product: "NordVPN",
+      plan: "12 Months",
+      date: "Aug 06, 2026",
+      status: "completed",
+      amount: 35,
+    },
+    {
+      id: "SST-1038",
+      product: "CapCut Pro",
+      plan: "3 Months",
+      date: "Aug 04, 2026",
+      status: "completed",
+      amount: 11,
+    },
+  ] satisfies DashboardOrder[],
+  transactions: [
+    {
+      id: "TXN-9921",
+      type: "debit",
+      description: "Order SST-1040 — ChatGPT Plus",
+      date: "Aug 08, 2026",
+      amount: 12,
+    },
+    {
+      id: "TXN-9910",
+      type: "credit",
+      description: "Wallet top-up",
+      date: "Aug 07, 2026",
+      amount: 50,
+    },
+    {
+      id: "TXN-9908",
+      type: "debit",
+      description: "Order SST-1038 — CapCut Pro",
+      date: "Aug 04, 2026",
+      amount: 11,
+    },
+    {
+      id: "TXN-9890",
+      type: "debit",
+      description: "Order SST-1035 — Canva",
+      date: "Aug 01, 2026",
+      amount: 9,
+    },
+  ] satisfies DashboardTransaction[],
+};
