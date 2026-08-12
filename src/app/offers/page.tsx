@@ -25,7 +25,7 @@ export default function OffersPage() {
       <section className="container-x py-16 sm:py-20">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {offers.map((offer, index) => (
-            <Reveal key={offer.id} delay={index * 0.06}>
+            <Reveal key={offer.id} delay={index * 0.06} className="h-full">
               <div className="group relative flex h-full flex-col rounded-card-lg border border-border bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-lift">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent-soft px-3 py-1 text-xs font-semibold text-accent-text">

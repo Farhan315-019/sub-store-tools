@@ -37,7 +37,7 @@ export function HowItWorks() {
         />
         <ol className="mt-12 grid gap-5 md:grid-cols-3">
           {steps.map((item, index) => (
-            <Reveal key={item.step} delay={index * 0.08}>
+            <Reveal key={item.step} delay={index * 0.08} className="h-full">
               <li className="relative h-full rounded-card-lg border border-border bg-surface p-6">
                 <div className="flex items-center justify-between">
                   <div className="grid size-12 place-items-center rounded-2xl border border-border bg-surface-2 text-accent-text">

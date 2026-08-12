@@ -102,7 +102,7 @@ export default function AboutPage() {
           </h2>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {values.map((value, index) => (
-              <Reveal key={value.title} delay={index * 0.06}>
+              <Reveal key={value.title} delay={index * 0.06} className="h-full">
                 <div className="h-full rounded-card-lg border border-border bg-surface p-6">
                   <value.icon className="size-5 text-accent-text" aria-hidden="true" />
                   <h3 className="mt-4 font-display text-base font-bold text-foreground">{value.title}</h3>

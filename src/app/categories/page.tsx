@@ -30,7 +30,7 @@ export default function CategoriesPage() {
       <section className="container-x py-16 sm:py-20">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category, index) => (
-            <Reveal key={category.slug} delay={index * 0.05}>
+            <Reveal key={category.slug} delay={index * 0.05} className="h-full">
               <CategoryCard category={category} />
             </Reveal>
           ))}

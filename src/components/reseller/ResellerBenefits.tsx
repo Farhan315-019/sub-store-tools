@@ -40,7 +40,7 @@ export function ResellerBenefits() {
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {benefits.map((benefit, index) => (
-            <Reveal key={benefit.title} delay={index * 0.06}>
+            <Reveal key={benefit.title} delay={index * 0.06} className="h-full">
               <div className="h-full rounded-card-lg border border-border bg-surface p-6 transition-colors duration-300 hover:border-accent/30">
                 <div className="grid size-12 place-items-center rounded-2xl border border-border bg-surface-2 text-accent-text">
                   <benefit.icon className="size-5" aria-hidden="true" />

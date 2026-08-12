@@ -14,7 +14,7 @@ export function Testimonials() {
       />
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {testimonials.map((testimonial, index) => (
-          <Reveal key={testimonial.quote} delay={index * 0.06}>
+          <Reveal key={testimonial.quote} delay={index * 0.06} className="h-full">
             <figure className="flex h-full flex-col rounded-card-lg border border-border bg-surface p-6">
               <div className="flex items-center justify-between">
                 <Quote className="size-5 text-accent-text" aria-hidden="true" />

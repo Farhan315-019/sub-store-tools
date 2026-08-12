@@ -19,7 +19,7 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BrandLogo } from "./BrandLogo";
 import { useSearch } from "@/components/search/SearchProvider";
 import { useTheme } from "./ThemeProvider";
@@ -77,7 +77,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="overflow-hidden border-b border-border bg-background">
+      <div className="hidden overflow-hidden border-b border-border bg-background sm:block">
         <div className="flex min-h-9 flex-wrap items-center justify-center gap-x-3 gap-y-0.5 px-4 py-1.5 text-center">
           <span className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-muted sm:text-xs">
             Mega Sale — Up to 80% OFF
@@ -103,10 +103,7 @@ export function Header() {
             scrolled ? "glass border-b border-border shadow-card" : "border-b border-transparent bg-transparent"
           )}
         >
-        <div
-          className="container-x flex h-16 items-center justify-between gap-4 sm:h-[4.25rem]"
-          onMouseLeave={() => setProductsOpen(false)}
-        >
+        <div className="container-x flex h-16 items-center justify-between gap-4 sm:h-[4.25rem]">
           <BrandLogo />
 
           <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
@@ -116,10 +113,14 @@ export function Header() {
                 const activeGroup = groupedProducts.find((g) => g.category.slug === activeCategory);
                 const ActiveCategoryIcon = categoryIcons[activeCategory] ?? Layers;
                 return (
-                  <Fragment key={item.href}>
+                  <div
+                    key={item.href}
+                    className="contents"
+                    onMouseEnter={() => setProductsOpen(true)}
+                    onMouseLeave={() => setProductsOpen(false)}
+                  >
                     <Link
                       href={item.href}
-                      onMouseEnter={() => setProductsOpen(true)}
                       className={cn(
                         "inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
                         active
@@ -150,8 +151,6 @@ export function Header() {
                           className="absolute inset-x-0 top-full z-50 pt-3"
                           role="dialog"
                           aria-label="All products catalogue"
-                          onMouseEnter={() => setProductsOpen(true)}
-                          onMouseLeave={() => setProductsOpen(false)}
                         >
                           <div className="container-x">
                           <div className="overflow-hidden rounded-2xl border border-border bg-background-elevated shadow-lift">
@@ -284,7 +283,7 @@ export function Header() {
                         </motion.div>
                       ) : null}
                     </AnimatePresence>
-                  </Fragment>
+                  </div>
                 );
               }
 

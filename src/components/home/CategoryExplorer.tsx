@@ -46,7 +46,7 @@ export function CategoryExplorer() {
             <Reveal
               key={category.slug}
               delay={index * 0.05}
-              className={cn("lg:col-span-3", spans[index])}
+              className={cn("h-full lg:col-span-3", spans[index])}
             >
               <Link
                 href={`/categories/${category.slug}`}
