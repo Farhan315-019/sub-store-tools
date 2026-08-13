@@ -6,9 +6,9 @@ const steps = [
   {
     icon: UserPlus,
     step: "Step 1",
-    title: "Create Your Account",
+    title: "Request Your Account",
     description:
-      "Sign up with your name, email and WhatsApp number. Your reseller account is approved by our team.",
+      "Send your details to our team. We create your reseller account for you and share your login credentials.",
   },
   {
     icon: ClipboardList,
@@ -32,7 +32,7 @@ export function ResellerSteps() {
       <SectionHeading
         eyebrow="Getting Started"
         title="How Reselling Works"
-        subtitle="A simple three-step path from signup to your first reseller order."
+        subtitle="A simple three-step path from requesting access to your first reseller order."
       />
       <ol className="mt-12 grid gap-5 md:grid-cols-3">
         {steps.map((item, index) => (

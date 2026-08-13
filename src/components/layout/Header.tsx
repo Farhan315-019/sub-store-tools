@@ -501,7 +501,7 @@ export function Header() {
                   onClick={() => setMenuOpen(false)}
                   className="inline-flex h-11 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground"
                 >
-                  Sign Up
+                  Become a Reseller
                 </Link>
               </div>
             </motion.div>

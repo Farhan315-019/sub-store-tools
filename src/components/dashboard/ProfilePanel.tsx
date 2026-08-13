@@ -6,9 +6,9 @@ import { Field, Input, Label } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
 export function ProfilePanel() {
-  const [name, setName] = useState("Reseller Demo");
-  const [email, setEmail] = useState("reseller@example.com");
-  const [phone, setPhone] = useState("+00 0000 000000");
+  const [name, setName] = useState("Ahmad Raza");
+  const [email, setEmail] = useState("ahmad@digitalbazaar.pk");
+  const [phone, setPhone] = useState("+92 300 1234567");
   const [saved, setSaved] = useState(false);
 
   const handleSubmit = (event: FormEvent) => {
@@ -57,10 +57,6 @@ export function ProfilePanel() {
           </Button>
         </div>
       </form>
-
-      <p className="text-xs text-muted-2">
-        Profile details are sample data and will be connected to authentication and profile storage.
-      </p>
     </div>
   );
 }

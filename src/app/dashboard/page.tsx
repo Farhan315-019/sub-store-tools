@@ -11,7 +11,9 @@ import { WalletPanel } from "@/components/dashboard/WalletPanel";
 import { TransactionsPanel } from "@/components/dashboard/TransactionsPanel";
 import { SupportPanel } from "@/components/dashboard/SupportPanel";
 import { ProfilePanel } from "@/components/dashboard/ProfilePanel";
-import { Badge } from "@/components/ui/Badge";
+
+const resellerName = "Ahmad Raza";
+const resellerStore = "Digital Bazaar";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -41,10 +43,10 @@ export default function DashboardPage() {
               <h1 className="font-display text-2xl font-extrabold text-foreground sm:text-3xl">
                 Reseller Dashboard
               </h1>
-              <Badge tone="accent">Demo</Badge>
             </div>
             <p className="mt-1 text-sm text-muted">
-              Welcome back, Reseller Demo. Here&apos;s what&apos;s happening with your business.
+              Welcome back, {resellerName} ({resellerStore}). Here&apos;s what&apos;s happening with
+              your business.
             </p>
           </div>
         </div>

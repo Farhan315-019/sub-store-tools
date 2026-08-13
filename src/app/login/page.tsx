@@ -20,7 +20,7 @@ export default function LoginPage() {
         <>
           New to Sub Store Tools?{" "}
           <Link href="/signup" className="font-semibold text-accent-text hover:underline">
-            Create a reseller account
+            Request a reseller account
           </Link>
         </>
       }

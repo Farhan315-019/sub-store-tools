@@ -1,10 +1,13 @@
 import type { DashboardOrder, DashboardTransaction } from "@/types";
 
 export const mockDashboard = {
-  walletBalance: 125.5,
+  resellerName: "Ahmad Raza",
+  resellerStore: "Digital Bazaar",
+  walletBalance: 2450,
   totalOrders: 24,
   pendingOrders: 3,
   completedOrders: 21,
+  totalSpent: 18350,
   orders: [
     {
       id: "SST-1042",
@@ -12,15 +15,15 @@ export const mockDashboard = {
       plan: "3 Months",
       date: "Aug 10, 2026",
       status: "completed",
-      amount: 13,
+      amount: 750,
     },
     {
       id: "SST-1041",
-      product: "Canva",
+      product: "Canva Pro",
       plan: "6 Months",
       date: "Aug 09, 2026",
       status: "processing",
-      amount: 19,
+      amount: 1450,
     },
     {
       id: "SST-1040",
@@ -28,7 +31,7 @@ export const mockDashboard = {
       plan: "1 Month",
       date: "Aug 08, 2026",
       status: "pending",
-      amount: 12,
+      amount: 1050,
     },
     {
       id: "SST-1039",
@@ -36,7 +39,7 @@ export const mockDashboard = {
       plan: "12 Months",
       date: "Aug 06, 2026",
       status: "completed",
-      amount: 35,
+      amount: 2400,
     },
     {
       id: "SST-1038",
@@ -44,7 +47,7 @@ export const mockDashboard = {
       plan: "3 Months",
       date: "Aug 04, 2026",
       status: "completed",
-      amount: 11,
+      amount: 850,
     },
   ] satisfies DashboardOrder[],
   transactions: [
@@ -53,28 +56,28 @@ export const mockDashboard = {
       type: "debit",
       description: "Order SST-1040 — ChatGPT Plus",
       date: "Aug 08, 2026",
-      amount: 12,
+      amount: 1050,
     },
     {
       id: "TXN-9910",
       type: "credit",
       description: "Wallet top-up",
       date: "Aug 07, 2026",
-      amount: 50,
+      amount: 5000,
     },
     {
       id: "TXN-9908",
       type: "debit",
       description: "Order SST-1038 — CapCut Pro",
       date: "Aug 04, 2026",
-      amount: 11,
+      amount: 850,
     },
     {
       id: "TXN-9890",
       type: "debit",
-      description: "Order SST-1035 — Canva",
+      description: "Order SST-1035 — Canva Pro",
       date: "Aug 01, 2026",
-      amount: 9,
+      amount: 950,
     },
   ] satisfies DashboardTransaction[],
 };

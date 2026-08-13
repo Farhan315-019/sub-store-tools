@@ -65,7 +65,7 @@ export const resellerFaq: FaqItem[] = [
   {
     question: "Who can become a reseller?",
     answer:
-      "Anyone looking to grow a digital business — freelancers, online sellers and agencies — can create a reseller account and start ordering at wholesale rates.",
+      "Anyone looking to grow a digital business — freelancers, online sellers and agencies — can request a reseller account and start ordering at wholesale rates.",
   },
   {
     question: "How do reseller orders work?",

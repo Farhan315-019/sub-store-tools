@@ -23,7 +23,7 @@ export function QuickOrder() {
   };
 
   const orderLink = product
-    ? buildOrderLink(product, plan)
+    ? buildOrderLink(product, plan, "Reseller")
     : "#";
 
   return (

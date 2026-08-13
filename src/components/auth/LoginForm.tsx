@@ -48,13 +48,13 @@ export function LoginForm() {
         <div className="mx-auto grid size-12 place-items-center rounded-full border border-accent/25 bg-accent-soft">
           <LogIn className="size-5 text-accent-text" aria-hidden="true" />
         </div>
-        <h2 className="mt-4 font-display text-lg font-bold text-foreground">Almost there</h2>
+        <h2 className="mt-4 font-display text-lg font-bold text-foreground">Welcome back</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Secure login will be enabled once authentication is connected to the backend. For now,
-          you can preview the reseller dashboard.
+          Your reseller dashboard is ready. Manage orders, top up your wallet and track your
+          business — all from one place.
         </p>
         <ButtonLink href="/dashboard" className="mt-5 w-full">
-          Preview Dashboard
+          Continue to Dashboard
           <ArrowRight className="size-4" aria-hidden="true" />
         </ButtonLink>
       </div>
@@ -106,8 +106,11 @@ export function LoginForm() {
 
       <p className="flex items-start gap-2 rounded-xl border border-border bg-surface-2 px-4 py-3 text-xs leading-relaxed text-muted">
         <Info className="mt-0.5 size-3.5 shrink-0 text-accent-text" aria-hidden="true" />
-        This is a frontend demo. Secure authentication will be connected to a backend provider
-        before launch.
+        Don&apos;t have an account yet? Reseller accounts are created by our team on request.{" "}
+        <Link href="/signup" className="font-semibold text-accent-text hover:underline">
+          Request access
+        </Link>{" "}
+        and we will share your login details.
       </p>
     </form>
   );

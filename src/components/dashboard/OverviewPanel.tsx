@@ -1,6 +1,7 @@
-import { CheckCircle2, Clock3, CreditCard, ShoppingBag, Zap } from "lucide-react";
+import { CheckCircle2, Clock3, CreditCard, ShoppingBag } from "lucide-react";
 import { mockDashboard } from "@/data/mockDashboard";
 import { getPopularProducts } from "@/data/products";
+import { formatPrice } from "@/lib/utils";
 import { StatCard } from "./StatCard";
 import { OrderStatusBadge } from "./OrderStatusBadge";
 import { ProductCard } from "@/components/products/ProductCard";
@@ -14,7 +15,7 @@ export function OverviewPanel() {
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         <StatCard
           label="Wallet Balance"
-          value={`$${mockDashboard.walletBalance.toFixed(2)}`}
+          value={formatPrice(mockDashboard.walletBalance) ?? "Rs. 0"}
           icon={CreditCard}
           hint="Available for orders"
         />
@@ -39,7 +40,7 @@ export function OverviewPanel() {
         <div className="rounded-card-lg border border-border bg-surface p-5 sm:p-6">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-base font-bold text-foreground">Recent Orders</h2>
-            <span className="text-xs text-muted-2">Sample data</span>
+            <span className="text-xs text-muted-2">Last 4 orders</span>
           </div>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[32rem] text-left text-sm">
@@ -60,7 +61,7 @@ export function OverviewPanel() {
                     <td className="py-3 pr-4 text-foreground">{order.product}</td>
                     <td className="py-3 pr-4 text-muted">{order.plan}</td>
                     <td className="py-3 pr-4 text-muted">{order.date}</td>
-                    <td className="py-3 pr-4 text-foreground">${order.amount.toFixed(2)}</td>
+                    <td className="py-3 pr-4 text-foreground">{formatPrice(order.amount)}</td>
                     <td className="py-3">
                       <OrderStatusBadge status={order.status} />
                     </td>
@@ -82,11 +83,6 @@ export function OverviewPanel() {
           ))}
         </div>
       </div>
-
-      <p className="flex items-center gap-2 text-xs text-muted-2">
-        <Zap className="size-3.5 text-accent-text" aria-hidden="true" />
-        Dashboard data is mock/demo data and will be replaced by backend data.
-      </p>
     </div>
   );
 }

@@ -35,7 +35,7 @@ export function ResellerHero() {
           <Reveal delay={0.24}>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <ButtonLink href="/signup" size="lg" className="w-full sm:w-auto">
-                Create Reseller Account
+                Request Reseller Account
                 <ArrowRight className="size-4" aria-hidden="true" />
               </ButtonLink>
               <ButtonLink href="/login" size="lg" variant="outline" className="w-full sm:w-auto">

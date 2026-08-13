@@ -1,4 +1,5 @@
 import { mockDashboard } from "@/data/mockDashboard";
+import { formatPrice } from "@/lib/utils";
 import { OrderStatusBadge } from "./OrderStatusBadge";
 
 export function OrdersPanel() {
@@ -29,7 +30,7 @@ export function OrdersPanel() {
                   <td className="px-5 py-4 text-foreground">{order.product}</td>
                   <td className="px-5 py-4 text-muted">{order.plan}</td>
                   <td className="px-5 py-4 text-muted">{order.date}</td>
-                  <td className="px-5 py-4 text-foreground">${order.amount.toFixed(2)}</td>
+                  <td className="px-5 py-4 text-foreground">{formatPrice(order.amount)}</td>
                   <td className="px-5 py-4">
                     <OrderStatusBadge status={order.status} />
                   </td>
@@ -39,8 +40,6 @@ export function OrdersPanel() {
           </table>
         </div>
       </div>
-
-      <p className="text-xs text-muted-2">Orders shown are sample data and will be replaced by live order data.</p>
     </div>
   );
 }

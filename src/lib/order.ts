@@ -1,12 +1,12 @@
 import { siteConfig } from "@/config/site";
 import type { Product, ProductPlan } from "@/types";
 
-export function buildOrderMessage(product: Product, plan?: ProductPlan): string {
+export function buildOrderMessage(product: Product, plan?: ProductPlan, orderType: "Retail" | "Reseller" = "Retail"): string {
   const parts = [
     `Hello ${siteConfig.name},`,
     `I would like to order: ${product.name}`,
     plan ? `Plan: ${plan.name}` : null,
-    `Order type: Retail`,
+    `Order type: ${orderType}`,
   ].filter(Boolean);
   return parts.join("\n");
 }
@@ -16,8 +16,8 @@ export function buildWhatsAppLink(message: string): string {
   return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
 }
 
-export function buildOrderLink(product: Product, plan?: ProductPlan): string {
-  return buildWhatsAppLink(buildOrderMessage(product, plan));
+export function buildOrderLink(product: Product, plan?: ProductPlan, orderType: "Retail" | "Reseller" = "Retail"): string {
+  return buildWhatsAppLink(buildOrderMessage(product, plan, orderType));
 }
 
 export function buildContactLink(): string {

@@ -54,12 +54,12 @@ export default function ResellerPage() {
                 Ready to grow your digital business?
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted">
-                Create your free reseller account today and start offering premium digital services
-                to your customers.
+                Request your reseller account today and start offering premium digital services to
+                your customers.
               </p>
               <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <ButtonLink href="/signup" size="lg">
-                  Create Reseller Account
+                  Request Reseller Account
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </ButtonLink>
                 <ButtonLink href="/login" size="lg" variant="outline">

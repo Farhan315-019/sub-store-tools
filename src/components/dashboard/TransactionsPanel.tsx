@@ -1,4 +1,5 @@
 import { mockDashboard } from "@/data/mockDashboard";
+import { formatPrice } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 export function TransactionsPanel() {
@@ -45,7 +46,8 @@ export function TransactionsPanel() {
                       transaction.type === "credit" ? "text-success" : "text-foreground"
                     )}
                   >
-                    {transaction.type === "credit" ? "+" : "-"}${transaction.amount.toFixed(2)}
+                    {transaction.type === "credit" ? "+" : "-"}
+                    {formatPrice(transaction.amount)}
                   </td>
                 </tr>
               ))}
@@ -53,8 +55,6 @@ export function TransactionsPanel() {
           </table>
         </div>
       </div>
-
-      <p className="text-xs text-muted-2">Transactions shown are sample data and will be replaced by live data.</p>
     </div>
   );
 }

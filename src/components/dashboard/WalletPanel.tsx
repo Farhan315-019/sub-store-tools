@@ -1,6 +1,12 @@
 import { ArrowRightLeft, ArrowUpRight, CreditCard } from "lucide-react";
 import { mockDashboard } from "@/data/mockDashboard";
+import { siteConfig } from "@/config/site";
+import { formatPrice } from "@/lib/utils";
 import { StatCard } from "./StatCard";
+
+const waTopUpLink = `https://wa.me/${siteConfig.whatsapp.replace(/[^\d]/g, "")}?text=${encodeURIComponent(
+  `Hello ${siteConfig.name}, I would like to top up my reseller wallet. Please share the payment details.`
+)}`;
 
 export function WalletPanel() {
   return (
@@ -15,10 +21,10 @@ export function WalletPanel() {
           <div className="absolute -right-10 -top-10 size-40 rounded-full bg-accent/15 blur-3xl" aria-hidden="true" />
           <p className="text-xs font-medium uppercase tracking-wider text-muted-2">Available Balance</p>
           <p className="mt-3 font-display text-4xl font-extrabold text-foreground">
-            ${mockDashboard.walletBalance.toFixed(2)}
+            {formatPrice(mockDashboard.walletBalance)}
           </p>
           <a
-            href="https://wa.me/"
+            href={waTopUpLink}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-5 inline-flex h-10 items-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-accent-foreground transition-all hover:bg-accent-strong"
@@ -26,10 +32,17 @@ export function WalletPanel() {
             <ArrowUpRight className="size-4" aria-hidden="true" />
             Top Up Balance
           </a>
-          <p className="mt-3 text-xs text-muted-2">Wallet top-ups will be enabled with online payments.</p>
+          <p className="mt-3 text-xs text-muted-2">
+            Top-ups are processed by our team — send your payment screenshot on WhatsApp.
+          </p>
         </div>
 
-        <StatCard label="Total Spent" value="$84.00" icon={CreditCard} hint="Across 24 orders" />
+        <StatCard
+          label="Total Spent"
+          value={formatPrice(mockDashboard.totalSpent) ?? "Rs. 0"}
+          icon={CreditCard}
+          hint={`Across ${mockDashboard.totalOrders} orders`}
+        />
       </div>
 
       <div className="rounded-card-lg border border-border bg-surface p-5 sm:p-6">
@@ -51,7 +64,8 @@ export function WalletPanel() {
                     : "text-sm font-semibold text-foreground"
                 }
               >
-                {transaction.type === "credit" ? "+" : "-"}${transaction.amount.toFixed(2)}
+                {transaction.type === "credit" ? "+" : "-"}
+                {formatPrice(transaction.amount)}
               </span>
             </li>
           ))}

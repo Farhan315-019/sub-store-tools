@@ -48,7 +48,7 @@ export function ResellerCTA() {
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <ButtonLink href="/signup" size="lg">
-                  Become a Reseller
+                  Request an Account
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </ButtonLink>
                 <ButtonLink href="/reseller" size="lg" variant="outline">

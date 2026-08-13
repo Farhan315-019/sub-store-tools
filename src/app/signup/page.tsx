@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthShell } from "@/components/auth/AuthShell";
-import { SignupForm } from "@/components/auth/SignupForm";
+import { RequestAccountForm } from "@/components/auth/RequestAccountForm";
 
 export const metadata: Metadata = {
-  title: "Create Account | Become a Reseller",
+  title: "Request Reseller Account | Become a Reseller",
   description:
-    "Create your Sub Store Tools reseller account and start growing your digital business with wholesale rates and fast fulfillment.",
+    "Request your Sub Store Tools reseller account. Our admin team creates your account and shares your login details — no self-signup required.",
   alternates: { canonical: "/signup" },
   robots: { index: false, follow: false },
 };
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 export default function SignupPage() {
   return (
     <AuthShell
-      title="Become a Reseller"
-      subtitle="Create your account to access reseller rates, order management and dedicated support."
+      title="Request Reseller Access"
+      subtitle="Reseller accounts are created by our team on request. Send us your details and we will set up your account and share your login credentials."
       footer={
         <>
           Already have an account?{" "}
@@ -25,7 +25,7 @@ export default function SignupPage() {
         </>
       }
     >
-      <SignupForm />
+      <RequestAccountForm />
     </AuthShell>
   );
 }
