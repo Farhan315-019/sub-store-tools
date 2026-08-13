@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   LifeBuoy,
   LogOut,
+  MessagesSquare,
   Package,
   PlusCircle,
   ShoppingBag,
@@ -20,6 +21,7 @@ export type DashboardSection =
   | "orders"
   | "wallet"
   | "transactions"
+  | "chat"
   | "support"
   | "profile";
 
@@ -36,6 +38,7 @@ export const dashboardSections: Array<{
   { id: "orders", label: "My Orders", icon: ShoppingBag },
   { id: "wallet", label: "Wallet", icon: CreditCard },
   { id: "transactions", label: "Transactions", icon: ArrowLeftRight },
+  { id: "chat", label: "Chat", icon: MessagesSquare },
   { id: "support", label: "Support", icon: LifeBuoy },
   { id: "profile", label: "Profile", icon: User },
 ];

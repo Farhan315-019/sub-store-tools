@@ -60,6 +60,30 @@ export function getMessages(conversationId: string): ChatMessage[] {
   return conversation ? conversation.messages : [];
 }
 
+export type ConversationSummary = {
+  id: string;
+  lastActivity: number;
+  messageCount: number;
+  lastMessage: Pick<ChatMessage, "role" | "text" | "createdAt"> | null;
+};
+
+export function listConversations(): ConversationSummary[] {
+  const store = readStore();
+  return Object.values(store)
+    .map((conversation) => {
+      const last = conversation.messages[conversation.messages.length - 1] ?? null;
+      return {
+        id: conversation.id,
+        lastActivity: conversation.lastActivity,
+        messageCount: conversation.messages.length,
+        lastMessage: last
+          ? { role: last.role, text: last.text, createdAt: last.createdAt }
+          : null,
+      };
+    })
+    .sort((a, b) => b.lastActivity - a.lastActivity);
+}
+
 export function getRecentConversationId(maxAgeMs: number): string | undefined {
   const store = readStore();
   const now = Date.now();

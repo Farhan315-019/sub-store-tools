@@ -9,6 +9,7 @@ import { ProductsPanel, NewOrderPanel } from "@/components/dashboard/ProductsPan
 import { OrdersPanel } from "@/components/dashboard/OrdersPanel";
 import { WalletPanel } from "@/components/dashboard/WalletPanel";
 import { TransactionsPanel } from "@/components/dashboard/TransactionsPanel";
+import { ChatPanel } from "@/components/dashboard/ChatPanel";
 import { SupportPanel } from "@/components/dashboard/SupportPanel";
 import { ProfilePanel } from "@/components/dashboard/ProfilePanel";
 
@@ -30,6 +31,7 @@ export default function DashboardPage() {
     orders: <OrdersPanel />,
     wallet: <WalletPanel />,
     transactions: <TransactionsPanel />,
+    chat: <ChatPanel />,
     support: <SupportPanel />,
     profile: <ProfilePanel />,
   };
