@@ -59,7 +59,7 @@ export function ContactForm() {
       <div className="flex flex-col gap-2.5 sm:flex-row">
         <Button type="button" onClick={submitViaEmail} size="lg" className="flex-1">
           <Send className="size-4" aria-hidden="true" />
-          Send via Email
+          Send Message
         </Button>
         <Button type="button" onClick={submitViaWhatsApp} size="lg" variant="secondary" className="flex-1">
           <MessageCircle className="size-4" aria-hidden="true" />

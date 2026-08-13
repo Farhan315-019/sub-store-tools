@@ -51,7 +51,7 @@ export default function ContactPage() {
                 <span className="block font-display text-base font-bold text-foreground">Email</span>
                 <span className="mt-1 block text-sm text-muted">{siteConfig.emailDisplay}</span>
                 <span className="mt-2 block text-xs font-semibold text-accent-text group-hover:underline">
-                  Send an email
+                  Send Message
                 </span>
               </span>
             </a>
