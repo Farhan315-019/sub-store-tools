@@ -1,14 +1,188 @@
 "use client";
 
-import { Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
-import type { FormEvent } from "react";
+import { Image as ImageIcon, Pencil, Plus, Trash2, X } from "lucide-react";
+import { useRef, useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import type { Product } from "@/types";
 import { Button } from "@/components/ui/Button";
-import { Checkbox, Field, Input, Select, Textarea } from "@/components/ui/Input";
+import { Checkbox, Field, Input, Label, Select, Textarea } from "@/components/ui/Input";
 import { formatPrice } from "@/lib/utils";
 import { categories } from "@/data/categories";
-import { adminPost, useAdminFetch } from "./useAdminFetch";
+import { adminPost, adminSend, useAdminFetch } from "./useAdminFetch";
+
+type ImageUploaderProps = {
+  value: string;
+  onUploaded: (url: string) => void;
+  onError: (message: string) => void;
+};
+
+function ImageUploader({ value, onUploaded, onError }: ImageUploaderProps) {
+  const [busy, setBusy] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    setBusy(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/admin/upload", { method: "POST", body: formData });
+      if (response.status === 401) {
+        window.location.reload();
+        return;
+      }
+      const data = (await response.json().catch(() => null)) as { url?: string; error?: string } | null;
+      if (!response.ok || !data?.url) {
+        onError(data?.error ?? "Image upload failed.");
+        return;
+      }
+      onUploaded(data.url);
+    } catch {
+      onError("Image upload failed.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-xl border border-border bg-surface-2">
+        {value ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={value} alt="Product preview" className="size-full object-cover" />
+        ) : (
+          <ImageIcon className="size-5 text-muted-2" aria-hidden="true" />
+        )}
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={busy}
+          className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-accent/40 disabled:opacity-50"
+        >
+          {busy ? "Uploading..." : value ? "Change image" : "Upload image"}
+        </button>
+        {value ? (
+          <button
+            type="button"
+            onClick={() => onUploaded("")}
+            className="text-left text-xs font-medium text-muted transition-colors hover:text-danger"
+          >
+            Remove image
+          </button>
+        ) : null}
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          className="hidden"
+          onChange={handleChange}
+        />
+      </div>
+    </div>
+  );
+}
+
+type ProductEditFormProps = {
+  product: Product;
+  onClose: () => void;
+  onSaved: () => void;
+};
+
+function ProductEditForm({ product, onClose, onSaved }: ProductEditFormProps) {
+  const [price, setPrice] = useState(product.plans[0]?.price?.toString() ?? "");
+  const [originalPrice, setOriginalPrice] = useState(
+    product.plans[0]?.originalPrice?.toString() ?? ""
+  );
+  const [duration, setDuration] = useState(product.plans[0]?.duration ?? "");
+  const [badge, setBadge] = useState(product.badge ?? "");
+  const [image, setImage] = useState(product.image ?? "");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSave = async () => {
+    setBusy(true);
+    setError("");
+    const result = await adminSend(`/api/admin/products/${product.slug}`, "PATCH", {
+      price: price === "" ? undefined : Number(price),
+      originalPrice: originalPrice === "" ? "" : Number(originalPrice),
+      duration,
+      badge,
+      image,
+    });
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.error ?? "Failed to save.");
+      return;
+    }
+    onSaved();
+  };
+
+  return (
+    <div className="mt-3 grid gap-4 rounded-xl border border-accent/30 bg-surface-1 p-4 sm:grid-cols-2">
+      <Field label="Price (PKR)" htmlFor={`edit-price-${product.slug}`}>
+        <Input
+          id={`edit-price-${product.slug}`}
+          type="number"
+          min="0"
+          value={price}
+          onChange={(event) => setPrice(event.target.value)}
+        />
+      </Field>
+      <Field
+        label="Original price (PKR)"
+        htmlFor={`edit-original-${product.slug}`}
+        hint="Higher than the sale price to show a discount. Empty removes the discount."
+      >
+        <Input
+          id={`edit-original-${product.slug}`}
+          type="number"
+          min="0"
+          value={originalPrice}
+          onChange={(event) => setOriginalPrice(event.target.value)}
+        />
+      </Field>
+      <Field label="Plan duration" htmlFor={`edit-duration-${product.slug}`}>
+        <Input
+          id={`edit-duration-${product.slug}`}
+          value={duration}
+          onChange={(event) => setDuration(event.target.value)}
+          placeholder="e.g. Monthly"
+        />
+      </Field>
+      <Field label="Badge (optional)" htmlFor={`edit-badge-${product.slug}`}>
+        <Input
+          id={`edit-badge-${product.slug}`}
+          value={badge}
+          onChange={(event) => setBadge(event.target.value)}
+          placeholder="e.g. New / Hot Deal"
+        />
+      </Field>
+      <div className="sm:col-span-2">
+        <Label htmlFor={`edit-image-${product.slug}`}>Product image</Label>
+        <div className="mt-1.5">
+          <ImageUploader value={image} onUploaded={setImage} onError={setError} />
+        </div>
+      </div>
+      {error ? (
+        <p role="alert" className="text-sm text-danger sm:col-span-2">
+          {error}
+        </p>
+      ) : null}
+      <div className="flex items-center gap-2 sm:col-span-2">
+        <Button size="sm" onClick={handleSave} disabled={busy}>
+          {busy ? "Saving..." : "Save"}
+        </Button>
+        <Button size="sm" variant="outline" onClick={onClose}>
+          Cancel
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 export function ProductsPanel() {
   const { data, busy, error, reload } = useAdminFetch<{ products: Product[] }>(
@@ -18,13 +192,16 @@ export function ProductsPanel() {
   const [name, setName] = useState("");
   const [categorySlug, setCategorySlug] = useState(categories[0]?.slug ?? "");
   const [price, setPrice] = useState("");
+  const [originalPrice, setOriginalPrice] = useState("");
   const [duration, setDuration] = useState("");
   const [badge, setBadge] = useState("");
+  const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [popular, setPopular] = useState(false);
   const [featured, setFeatured] = useState(false);
   const [formError, setFormError] = useState("");
   const [formBusy, setFormBusy] = useState(false);
+  const [editingSlug, setEditingSlug] = useState<string | null>(null);
 
   const handleAdd = async (event: FormEvent) => {
     event.preventDefault();
@@ -34,8 +211,10 @@ export function ProductsPanel() {
       name,
       categorySlug,
       price: price === "" ? undefined : Number(price),
+      originalPrice: originalPrice === "" ? undefined : Number(originalPrice),
       duration: duration || undefined,
       badge: badge || undefined,
+      image: image || undefined,
       description: description || undefined,
       popular,
       featured,
@@ -47,8 +226,10 @@ export function ProductsPanel() {
     }
     setName("");
     setPrice("");
+    setOriginalPrice("");
     setDuration("");
     setBadge("");
+    setImage("");
     setDescription("");
     setPopular(false);
     setFeatured(false);
@@ -77,7 +258,8 @@ export function ProductsPanel() {
       <div>
         <h1 className="font-display text-2xl font-bold text-foreground">Products</h1>
         <p className="mt-1 text-sm text-muted">
-          Add new products or remove existing ones. Changes reflect on the site instantly.
+          Add new products or edit prices, discounts and images. Changes reflect on the site
+          instantly.
         </p>
       </div>
 
@@ -122,6 +304,20 @@ export function ProductsPanel() {
               placeholder="e.g. 800"
             />
           </Field>
+          <Field
+            label="Original price (PKR)"
+            htmlFor="admin-product-original-price"
+            hint="Higher than the sale price to show a discount %."
+          >
+            <Input
+              id="admin-product-original-price"
+              type="number"
+              min="0"
+              value={originalPrice}
+              onChange={(event) => setOriginalPrice(event.target.value)}
+              placeholder="e.g. 1200"
+            />
+          </Field>
           <Field label="Plan duration (optional)" htmlFor="admin-product-duration">
             <Input
               id="admin-product-duration"
@@ -138,6 +334,12 @@ export function ProductsPanel() {
               placeholder="e.g. New / Hot Deal"
             />
           </Field>
+          <div className="sm:col-span-2">
+            <Label htmlFor="admin-product-image">Product image</Label>
+            <div className="mt-1.5">
+              <ImageUploader value={image} onUploaded={setImage} onError={setFormError} />
+            </div>
+          </div>
           <div className="flex items-end gap-5 pb-3">
             <label className="flex items-center gap-2 text-sm font-medium text-foreground">
               <Checkbox checked={popular} onChange={(event) => setPopular(event.target.checked)} />
@@ -189,59 +391,91 @@ export function ProductsPanel() {
         ) : (
           <ul className="divide-y divide-border">
             {products.map((product) => (
-              <li key={product.id} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-medium text-foreground">{product.name}</p>
-                    {product.badge ? (
-                      <span className="rounded-full border border-accent/30 bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent-text">
-                        {product.badge}
-                      </span>
-                    ) : null}
-                    {product.popular ? (
-                      <span className="rounded-full border border-border px-2 py-0.5 text-xs font-medium text-muted">
-                        Popular
-                      </span>
-                    ) : null}
+              <li key={product.id} className="px-5 py-4 sm:px-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-medium text-foreground">{product.name}</p>
+                      {product.badge ? (
+                        <span className="rounded-full border border-accent/30 bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent-text">
+                          {product.badge}
+                        </span>
+                      ) : null}
+                      {product.popular ? (
+                        <span className="rounded-full border border-border px-2 py-0.5 text-xs font-medium text-muted">
+                          Popular
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="mt-1 text-xs text-muted-2">
+                      {product.category}
+                      {product.plans[0]?.price ? ` · ${formatPrice(product.plans[0].price)}` : " · Contact us"}
+                      {product.plans[0]?.originalPrice
+                        ? ` · was ${formatPrice(product.plans[0].originalPrice)}`
+                        : ""}
+                      {" · "}
+                      <a
+                        href={`/products/${product.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-accent-text hover:underline"
+                      >
+                        View
+                      </a>
+                    </p>
                   </div>
-                  <p className="mt-1 text-xs text-muted-2">
-                    {product.category}
-                    {product.plans[0]?.price ? ` · ${formatPrice(product.plans[0].price)}` : " · Contact us"}
-                    {" · "}
-                    <a
-                      href={`/products/${product.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-accent-text hover:underline"
+                  <div className="flex shrink-0 items-center gap-2">
+                    <label className="flex items-center gap-1.5 text-xs font-medium text-muted">
+                      <Checkbox
+                        checked={product.popular}
+                        onChange={(event) => toggleFlag(product.slug, "popular", event.target.checked)}
+                      />
+                      Popular
+                    </label>
+                    <label className="flex items-center gap-1.5 text-xs font-medium text-muted">
+                      <Checkbox
+                        checked={product.featured}
+                        onChange={(event) => toggleFlag(product.slug, "featured", event.target.checked)}
+                      />
+                      Featured
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setEditingSlug((current) =>
+                          current === product.slug ? null : product.slug
+                        )
+                      }
+                      aria-label={`Edit ${product.name}`}
+                      className="grid size-9 place-items-center rounded-xl border border-border text-muted transition-colors hover:border-accent/40 hover:text-accent-text"
                     >
-                      View
-                    </a>
-                  </p>
+                      {editingSlug === product.slug ? (
+                        <X className="size-4" aria-hidden="true" />
+                      ) : (
+                        <Pencil className="size-4" aria-hidden="true" />
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(product.slug, product.name)}
+                      aria-label={`Delete ${product.name}`}
+                      className="grid size-9 place-items-center rounded-xl border border-border text-muted transition-colors hover:border-danger/40 hover:text-danger"
+                    >
+                      <Trash2 className="size-4" aria-hidden="true" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-muted">
-                    <Checkbox
-                      checked={product.popular}
-                      onChange={(event) => toggleFlag(product.slug, "popular", event.target.checked)}
-                    />
-                    Popular
-                  </label>
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-muted">
-                    <Checkbox
-                      checked={product.featured}
-                      onChange={(event) => toggleFlag(product.slug, "featured", event.target.checked)}
-                    />
-                    Featured
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(product.slug, product.name)}
-                    aria-label={`Delete ${product.name}`}
-                    className="grid size-9 place-items-center rounded-xl border border-border text-muted transition-colors hover:border-danger/40 hover:text-danger"
-                  >
-                    <Trash2 className="size-4" aria-hidden="true" />
-                  </button>
-                </div>
+
+                {editingSlug === product.slug ? (
+                  <ProductEditForm
+                    product={product}
+                    onClose={() => setEditingSlug(null)}
+                    onSaved={() => {
+                      setEditingSlug(null);
+                      void reload();
+                    }}
+                  />
+                ) : null}
               </li>
             ))}
           </ul>

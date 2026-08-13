@@ -10,13 +10,16 @@ function candidatesFor(slug: string): string[] {
 }
 
 type ProductImageProps = {
-  product: Pick<Product, "slug" | "name">;
+  product: Pick<Product, "slug" | "name" | "image">;
   className?: string;
   priority?: boolean;
 };
 
 export function ProductImage({ product, className, priority = false }: ProductImageProps) {
-  const candidates = candidatesFor(product.slug);
+  const fallbackCandidates = candidatesFor(product.slug);
+  const candidates = product.image
+    ? [product.image, ...fallbackCandidates]
+    : fallbackCandidates;
   const [index, setIndex] = useState(0);
   const imgRef = useRef<HTMLImageElement>(null);
   const currentSrc = candidates[Math.min(index, candidates.length - 1)];

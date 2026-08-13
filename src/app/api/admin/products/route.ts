@@ -21,6 +21,12 @@ export async function POST(request: NextRequest) {
       body?.price === undefined || body?.price === "" || Number.isNaN(Number(body?.price))
         ? undefined
         : Math.max(0, Math.round(Number(body.price)));
+    const originalPrice =
+      body?.originalPrice === undefined ||
+      body?.originalPrice === "" ||
+      Number.isNaN(Number(body?.originalPrice))
+        ? undefined
+        : Math.max(0, Math.round(Number(body.originalPrice)));
 
     if (!name) {
       return NextResponse.json({ ok: false, error: "Product name is required." }, { status: 400 });
@@ -30,8 +36,10 @@ export async function POST(request: NextRequest) {
       name,
       categorySlug,
       price,
+      originalPrice,
       duration: body?.duration ? String(body.duration) : undefined,
       badge: body?.badge ? String(body.badge) : undefined,
+      image: body?.image ? String(body.image) : undefined,
       popular: Boolean(body?.popular),
       featured: Boolean(body?.featured),
       description: body?.description ? String(body.description) : name,

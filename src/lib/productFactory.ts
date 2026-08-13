@@ -13,8 +13,10 @@ export function buildNewProduct(input: {
   name: string;
   categorySlug: string;
   price?: number;
+  originalPrice?: number;
   duration?: string;
   badge?: string;
+  image?: string;
   popular: boolean;
   featured: boolean;
   description: string;
@@ -40,6 +42,10 @@ export function buildNewProduct(input: {
               name: duration || "Monthly",
               duration: duration || undefined,
               price: input.price,
+              originalPrice:
+                typeof input.originalPrice === "number" && input.originalPrice > input.price
+                  ? input.originalPrice
+                  : undefined,
             },
           ]
         : [],
@@ -47,6 +53,7 @@ export function buildNewProduct(input: {
     popular: input.popular,
     status: "available",
     badge: input.badge?.trim() || undefined,
+    image: input.image?.trim() || undefined,
     deliveryTime: "Delivery within 24 hours of order confirmation",
     seoTitle: `${input.name.trim()} Subscription | ${category.name} — Sub Store Tools`,
     seoDescription: description,

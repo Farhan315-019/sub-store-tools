@@ -43,8 +43,16 @@ export function useAdminFetch<T>(url: string) {
 }
 
 export async function adminPost(url: string, body?: unknown): Promise<{ ok: boolean; error?: string }> {
+  return adminSend(url, "POST", body);
+}
+
+export async function adminSend(
+  url: string,
+  method: string,
+  body?: unknown
+): Promise<{ ok: boolean; error?: string }> {
   const res = await fetch(url, {
-    method: "POST",
+    method,
     headers: { "Content-Type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
   });

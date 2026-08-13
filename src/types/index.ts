@@ -23,6 +23,7 @@ export type Product = {
   popular: boolean;
   status: ProductStatus;
   badge?: string;
+  image?: string;
   deliveryTime?: string;
   seoTitle: string;
   seoDescription: string;
