@@ -78,16 +78,16 @@ export function ProductCard({ product }: { product: Product }) {
           href={whatsappLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-7 flex-1 items-center justify-center gap-1 rounded-full bg-[#25d366] text-[0.6rem] font-semibold text-white transition-all hover:brightness-110 active:scale-[0.98] lg:h-10 lg:gap-2 lg:text-sm"
+          className="hidden h-10 flex-1 items-center justify-center gap-2 rounded-full bg-[#25d366] text-sm font-semibold text-white transition-all hover:brightness-110 active:scale-[0.98] lg:inline-flex"
         >
-          <WhatsAppIcon className="size-3 lg:size-4" aria-hidden="true" />
+          <WhatsAppIcon className="size-4" aria-hidden="true" />
           <span className="truncate">Order Now</span>
         </a>
         <Link
           href={`/products/${product.slug}`}
-          className="inline-flex h-7 items-center gap-1 rounded-full border border-border px-1.5 text-[0.6rem] font-semibold text-foreground transition-all hover:border-accent/50 hover:bg-accent hover:text-accent-foreground lg:h-10 lg:px-3.5 lg:text-xs"
+          className="inline-flex h-7 flex-1 items-center justify-center gap-1 rounded-full border border-border px-1.5 text-[0.6rem] font-semibold text-foreground transition-all hover:border-accent/50 hover:bg-accent hover:text-accent-foreground lg:h-10 lg:flex-none lg:px-3.5 lg:text-xs"
         >
-          <span className="hidden lg:inline">Details</span>
+          <span>Details</span>
           <ArrowUpRight className="size-3 lg:size-3.5" aria-hidden="true" />
         </Link>
       </div>
