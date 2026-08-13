@@ -85,8 +85,10 @@ function verifyPassword(password: string, salt: string, passwordHash: string): b
 }
 
 function defaultDB(): DB {
+  const username = process.env.ADMIN_USERNAME?.trim() || "admin";
+  const password = process.env.ADMIN_PASSWORD || "admin";
   return {
-    admin: { username: "admin", ...hashPassword("admin") },
+    admin: { username, ...hashPassword(password) },
     sessions: [],
     sellers: [],
     products: allProducts,
@@ -108,7 +110,10 @@ function readDB(): DB {
 
 function writeDB(db: DB): void {
   fs.mkdirSync(DB_DIR, { recursive: true });
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf8");
+  const payload = JSON.stringify(db, null, 2);
+  const tmpPath = `${DB_PATH}.tmp`;
+  fs.writeFileSync(tmpPath, payload, "utf8");
+  fs.renameSync(tmpPath, DB_PATH);
 }
 
 function mutate<T>(fn: (db: DB) => T): T {
@@ -127,9 +132,17 @@ function sanitizeSeller(seller: Seller) {
 
 export const store = {
   verifyAdmin(username: string, password: string): string | null {
+    const envUsername = process.env.ADMIN_USERNAME?.trim();
+    const envPassword = process.env.ADMIN_PASSWORD;
     return mutate((db) => {
-      if (db.admin.username !== username) return null;
-      if (!verifyPassword(password, db.admin.salt, db.admin.passwordHash)) return null;
+      let verified =
+        db.admin.username === username &&
+        verifyPassword(password, db.admin.salt, db.admin.passwordHash);
+      if (!verified && envUsername && envPassword && username === envUsername && password === envPassword) {
+        verified = true;
+        db.admin = { username: envUsername, ...hashPassword(envPassword) };
+      }
+      if (!verified) return null;
       const token = crypto.randomBytes(24).toString("hex");
       db.sessions.push({ token, createdAt: new Date().toISOString() });
       if (db.sessions.length > 50) db.sessions = db.sessions.slice(-50);

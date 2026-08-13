@@ -42,15 +42,21 @@ export function useAdminFetch<T>(url: string) {
   return { data, error, busy, reload };
 }
 
-export async function adminPost(url: string, body?: unknown): Promise<{ ok: boolean; error?: string }> {
-  return adminSend(url, "POST", body);
+export async function adminPost(
+  url: string,
+  body?: unknown,
+  options?: { reloadOn401?: boolean }
+): Promise<{ ok: boolean; error?: string }> {
+  return adminSend(url, "POST", body, options);
 }
 
 export async function adminSend(
   url: string,
   method: string,
-  body?: unknown
+  body?: unknown,
+  options?: { reloadOn401?: boolean }
 ): Promise<{ ok: boolean; error?: string }> {
+  const { reloadOn401 = true } = options ?? {};
   const res = await fetch(url, {
     method,
     headers: { "Content-Type": "application/json" },
@@ -58,8 +64,8 @@ export async function adminSend(
   });
   const json = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
   if (res.status === 401) {
-    window.location.reload();
-    return { ok: false, error: "Session expired" };
+    if (reloadOn401) window.location.reload();
+    return { ok: false, error: json?.error ?? "Session expired" };
   }
   if (!res.ok) return { ok: false, error: json?.error ?? "Request failed" };
   return { ok: true };

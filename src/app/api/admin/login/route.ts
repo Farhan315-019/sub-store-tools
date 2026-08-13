@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { store } from "@/lib/store";
 import { setAdminSession } from "@/lib/adminAuth";
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await _request.json();
     const username = String(body?.username ?? "").trim();
     const password = String(body?.password ?? "");
     if (!username || !password) {
@@ -20,8 +20,7 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
-    const proto = request.headers.get("x-forwarded-proto") ?? "http";
-    await setAdminSession(token, proto === "https");
+    await setAdminSession(token);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ ok: false, error: "Something went wrong." }, { status: 500 });

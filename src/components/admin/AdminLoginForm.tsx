@@ -19,7 +19,11 @@ export function AdminLoginForm() {
     event.preventDefault();
     setError("");
     setBusy(true);
-    const result = await adminPost("/api/admin/login", { username, password });
+    const result = await adminPost(
+      "/api/admin/login",
+      { username, password },
+      { reloadOn401: false }
+    );
     if (!result.ok) {
       setError(result.error ?? "Login failed.");
       setBusy(false);

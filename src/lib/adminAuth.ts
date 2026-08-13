@@ -14,12 +14,12 @@ export async function isAdminAuthed(): Promise<boolean> {
   return store.isValidSession(await getAdminToken());
 }
 
-export async function setAdminSession(token: string, secure = false): Promise<void> {
+export async function setAdminSession(token: string): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(ADMIN_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure,
+    secure: process.env.COOKIE_SECURE === "true",
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
   });
