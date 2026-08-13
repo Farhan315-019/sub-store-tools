@@ -11,8 +11,23 @@ export function OrdersPanel() {
       </div>
 
       <div className="overflow-hidden rounded-card-lg border border-border bg-surface">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[40rem] text-left text-sm">
+        <ul className="divide-y divide-border md:hidden">
+          {mockDashboard.orders.map((order) => (
+            <li key={order.id} className="px-5 py-4">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm font-semibold text-accent-text">{order.id}</p>
+                <OrderStatusBadge status={order.status} />
+              </div>
+              <p className="mt-1.5 text-sm font-semibold text-foreground">{order.product}</p>
+              <p className="mt-0.5 text-xs text-muted-2">
+                {order.plan} · {order.date} · {formatPrice(order.amount)}
+              </p>
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden overflow-x-auto md:block">
+          <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-border bg-surface-2 text-xs uppercase tracking-wider text-muted-2">
                 <th scope="col" className="px-5 py-3.5 font-medium">Order</th>

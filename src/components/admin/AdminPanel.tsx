@@ -56,13 +56,13 @@ export function AdminPanel() {
         <aside className="lg:sticky lg:top-28 lg:h-fit">
           <nav
             aria-label="Admin navigation"
-            className="rounded-card-lg border border-border bg-surface p-3"
+            className="rounded-card-lg border border-border bg-surface p-2 lg:p-3"
           >
-            <div className="border-b border-border px-3.5 pb-3">
+            <div className="hidden border-b border-border px-3.5 pb-3 lg:block">
               <p className="font-display text-sm font-bold text-foreground">Admin Panel</p>
               <p className="text-xs text-muted-2">Manage your store</p>
             </div>
-            <ul className="mt-1.5 flex gap-1.5 overflow-x-auto pb-1 no-scrollbar lg:flex-col lg:overflow-visible lg:pb-0">
+            <ul className="mt-1.5 flex gap-1.5 overflow-x-auto pb-1 no-scrollbar lg:mt-1.5 lg:flex-col lg:overflow-visible lg:pb-0">
               {tabs.map((tab) => {
                 const isActive = tab.id === active;
                 return (

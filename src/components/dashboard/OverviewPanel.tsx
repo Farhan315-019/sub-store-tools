@@ -42,8 +42,30 @@ export function OverviewPanel() {
             <h2 className="font-display text-base font-bold text-foreground">Recent Orders</h2>
             <span className="text-xs text-muted-2">Last 4 orders</span>
           </div>
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full min-w-[32rem] text-left text-sm">
+
+          <ul className="mt-4 divide-y divide-border md:hidden">
+            {mockDashboard.orders.slice(0, 4).map((order) => (
+              <li key={order.id} className="flex items-center justify-between gap-3 py-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">
+                    <span className="text-accent-text">{order.id}</span> — {order.product}
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted-2">
+                    {order.plan} · {order.date}
+                  </p>
+                </div>
+                <div className="flex shrink-0 flex-col items-end gap-1.5">
+                  <span className="text-sm font-semibold text-foreground">
+                    {formatPrice(order.amount)}
+                  </span>
+                  <OrderStatusBadge status={order.status} />
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-4 hidden overflow-x-auto md:block">
+            <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-border text-xs uppercase tracking-wider text-muted-2">
                   <th scope="col" className="pb-3 pr-4 font-medium">Order</th>

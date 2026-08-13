@@ -96,7 +96,7 @@ export function OrdersPanel() {
                       <p className="mt-1 text-xs text-muted">“{order.notes}”</p>
                     ) : null}
                   </div>
-                  <div className="flex shrink-0 items-center gap-2">
+                  <div className="flex shrink-0 flex-wrap items-center gap-2">
                     <span className={cn("text-xs font-semibold", statusStyles[order.status])}>
                       {order.status}
                     </span>

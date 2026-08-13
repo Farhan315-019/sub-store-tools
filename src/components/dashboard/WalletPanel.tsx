@@ -20,7 +20,7 @@ export function WalletPanel() {
         <div className="relative overflow-hidden rounded-card-lg border border-accent/25 bg-background-elevated p-6">
           <div className="absolute -right-10 -top-10 size-40 rounded-full bg-accent/15 blur-3xl" aria-hidden="true" />
           <p className="text-xs font-medium uppercase tracking-wider text-muted-2">Available Balance</p>
-          <p className="mt-3 font-display text-4xl font-extrabold text-foreground">
+          <p className="mt-3 break-words font-display text-3xl font-extrabold text-foreground sm:text-4xl">
             {formatPrice(mockDashboard.walletBalance)}
           </p>
           <a
