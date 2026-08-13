@@ -97,7 +97,7 @@ export const aiProducts: Product[] = [
     ],
     plans: singlePlan(4000),
     featured: true,
-    popular: false,
+    popular: true,
     status: "available",
     badge: "New",
     deliveryTime: "Delivery within 24 hours of order confirmation",

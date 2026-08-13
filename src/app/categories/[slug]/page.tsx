@@ -3,13 +3,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCategoryBySlug } from "@/data/categories";
 import { getCategoryColor } from "@/lib/categoryColors";
-import { getCategoriesWithCounts, getProductsByCategory, getTotalProductCount } from "@/data/products";
+import { getCategoriesWithCounts, getProductsByCategory, getTotalProductCount } from "@/lib/catalog";
 import { siteConfig } from "@/config/site";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { Breadcrumbs } from "@/components/products/Breadcrumbs";
 import { Accordion } from "@/components/ui/Accordion";
 import { productFaq } from "@/data/faq";
 import { cn } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
 
 type CategoryPageProps = {
   params: Promise<{ slug: string }>;

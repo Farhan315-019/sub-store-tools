@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import { getPopularProducts } from "@/data/products";
+import { getPopularProducts } from "@/lib/catalog";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { ProductCard } from "@/components/products/ProductCard";

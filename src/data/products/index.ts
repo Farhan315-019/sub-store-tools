@@ -68,8 +68,24 @@ export function getFeaturedProducts(): Product[] {
   return allProducts.filter((product) => product.featured);
 }
 
+export const TREND_ORDER = [
+  "capcut-pro",
+  "chatgpt-plus",
+  "netflix",
+  "prime-video",
+  "veo-3",
+  "gemini",
+];
+
 export function getPopularProducts(limit = 8): Product[] {
-  return allProducts.filter((product) => product.popular).slice(0, limit);
+  return allProducts
+    .filter((product) => product.popular)
+    .sort((a, b) => {
+      const aIndex = TREND_ORDER.indexOf(a.slug);
+      const bIndex = TREND_ORDER.indexOf(b.slug);
+      return (aIndex === -1 ? Infinity : aIndex) - (bIndex === -1 ? Infinity : bIndex);
+    })
+    .slice(0, limit);
 }
 
 export function getRelatedProducts(product: Product, limit = 4): Product[] {

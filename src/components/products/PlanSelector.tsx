@@ -27,6 +27,19 @@ export function PlanSelector({ product }: PlanSelectorProps) {
       : 0;
   const orderLink = buildOrderLink(product, selectedPlan);
 
+  const recordOrder = (orderType: "Retail" | "Reseller") => {
+    void fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productId: product.id,
+        productName: product.name,
+        plan: selectedPlan?.name,
+        orderType,
+      }),
+    }).catch(() => {});
+  };
+
   return (
     <div className="rounded-card-lg border border-border bg-surface p-6 sm:p-7">
       <div className="flex items-center justify-between gap-2">
@@ -94,6 +107,7 @@ export function PlanSelector({ product }: PlanSelectorProps) {
           href={orderLink}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => recordOrder("Retail")}
           className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent text-sm font-semibold text-accent-foreground transition-all hover:bg-accent-strong hover:shadow-glow active:scale-[0.98]"
         >
           <MessageCircle className="size-4" aria-hidden="true" />
@@ -104,6 +118,7 @@ export function PlanSelector({ product }: PlanSelectorProps) {
             `Order Request — ${product.name}`,
             `Hello ${siteConfig.name},\nI would like to order:\nProduct: ${product.name}\nPlan: ${selectedPlan?.name ?? ""}\nPlease confirm the details.`
           )}
+          onClick={() => recordOrder("Retail")}
           className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-border-strong text-sm font-semibold text-foreground transition-colors hover:bg-surface-2"
         >
           <Mail className="size-4" aria-hidden="true" />

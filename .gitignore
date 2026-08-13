@@ -11,3 +11,4 @@ dev-err.log
 dom-dump.html
 .env*
 .data/
+data/store.json

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { BrowseProducts } from "@/components/home/BrowseProducts";
-import { getCategoriesWithCounts, getTotalProductCount } from "@/data/products";
+import { getCategoriesWithCounts, getTotalProductCount } from "@/lib/catalog";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "All Products | Digital Software & Subscriptions",

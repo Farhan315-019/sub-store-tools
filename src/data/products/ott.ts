@@ -47,7 +47,7 @@ export const ottProducts: Product[] = [
     ],
     plans: singlePlan(500),
     featured: true,
-    popular: false,
+    popular: true,
     status: "available",
     badge: "Popular",
     deliveryTime: "Within a few hours of order confirmation",

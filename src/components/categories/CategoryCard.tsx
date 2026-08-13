@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, Clapperboard, GraduationCap, ShieldCheck, Sparkles, Wand, type LucideIcon } from "lucide-react";
 import type { Category } from "@/types";
-import { getProductsByCategory } from "@/data/products";
+import { getProductsByCategory } from "@/lib/catalog";
 
 const categoryIcons: Record<string, LucideIcon> = {
   "ott-services": Clapperboard,

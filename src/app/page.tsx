@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Hero } from "@/components/home/Hero";
 import { TrustStrip } from "@/components/home/TrustStrip";
 import { CategoryExplorer } from "@/components/home/CategoryExplorer";

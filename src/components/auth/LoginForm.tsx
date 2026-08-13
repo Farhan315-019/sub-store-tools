@@ -10,6 +10,7 @@ import Link from "next/link";
 type Errors = {
   email?: string;
   password?: string;
+  form?: string;
 };
 
 export function LoginForm() {
@@ -18,6 +19,7 @@ export function LoginForm() {
   const [remember, setRemember] = useState(true);
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   const validate = (): boolean => {
     const next: Errors = {};
@@ -28,17 +30,33 @@ export function LoginForm() {
     }
     if (!password) {
       next.password = "Password is required.";
-    } else if (password.length < 8) {
-      next.password = "Password must be at least 8 characters.";
     }
     setErrors(next);
     return Object.keys(next).length === 0;
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (validate()) {
-      setSubmitted(true);
+    if (!validate()) return;
+
+    setBusy(true);
+    setErrors((prev) => ({ ...prev, form: undefined }));
+    try {
+      const res = await fetch("/api/seller/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setErrors({ form: data?.error ?? "Login failed. Please try again." });
+      }
+    } catch {
+      setErrors({ form: "Could not reach the server. Please try again." });
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -99,9 +117,15 @@ export function LoginForm() {
         </Link>
       </div>
 
-      <Button type="submit" size="lg" className="mt-2 w-full">
+      {errors.form ? (
+        <p role="alert" className="rounded-xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger">
+          {errors.form}
+        </p>
+      ) : null}
+
+      <Button type="submit" size="lg" className="mt-2 w-full" disabled={busy}>
         <LockKeyhole className="size-4" aria-hidden="true" />
-        Login
+        {busy ? "Signing in..." : "Login"}
       </Button>
 
       <p className="flex items-start gap-2 rounded-xl border border-border bg-surface-2 px-4 py-3 text-xs leading-relaxed text-muted">

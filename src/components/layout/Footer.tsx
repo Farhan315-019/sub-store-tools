@@ -146,6 +146,12 @@ export function Footer() {
             {siteConfig.name} is an independent storefront. All product names, logos and brands are
             property of their respective owners and are used for identification purposes only.
           </p>
+          <Link
+            href="/admin"
+            className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-accent-text"
+          >
+            Admin
+          </Link>
         </div>
       </div>
     </footer>

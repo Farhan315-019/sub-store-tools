@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sendContactEmail } from "@/lib/email";
+import { store } from "@/lib/store";
 
 export const runtime = "nodejs";
 
@@ -9,6 +10,7 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const name = typeof body?.name === "string" ? body.name.trim().slice(0, 100) : "";
   const email = typeof body?.email === "string" ? body.email.trim().slice(0, 200) : "";
+  const phone = typeof body?.phone === "string" ? body.phone.trim().slice(0, 40) : "";
   const message =
     typeof body?.message === "string" ? body.message.trim().slice(0, MAX_MESSAGE_LENGTH) : "";
 
@@ -22,13 +24,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Message is required." }, { status: 400 });
   }
 
-  const sent = await sendContactEmail({ name, email, message });
-  if (!sent) {
-    return NextResponse.json(
-      { error: "Email service is not configured. Please try WhatsApp instead." },
-      { status: 503 }
-    );
-  }
+  store.addMessage({ name, email, phone: phone || undefined, message });
+
+  await sendContactEmail({ name, email, message });
 
   return NextResponse.json({ ok: true });
 }

@@ -26,6 +26,21 @@ export function QuickOrder() {
     ? buildOrderLink(product, plan, "Reseller")
     : "#";
 
+  const recordOrder = () => {
+    void fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productId: product?.id,
+        productName: product?.name,
+        plan: plan?.name,
+        quantity: quantity ? Number(quantity) : undefined,
+        orderType: "Reseller",
+        notes: notes || undefined,
+      }),
+    }).catch(() => {});
+  };
+
   return (
     <div className="rounded-card-lg border border-border bg-surface p-5 sm:p-6">
       <h2 className="font-display text-base font-bold text-foreground">Quick Order</h2>
@@ -71,6 +86,7 @@ export function QuickOrder() {
           href={orderLink}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={recordOrder}
           className="mt-1 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-accent text-sm font-semibold text-accent-foreground transition-all hover:bg-accent-strong hover:shadow-glow active:scale-[0.98]"
         >
           <MessageCircle className="size-4" aria-hidden="true" />

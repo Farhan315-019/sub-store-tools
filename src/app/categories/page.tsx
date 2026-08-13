@@ -3,6 +3,8 @@ import { categories } from "@/data/categories";
 import { CategoryCard } from "@/components/categories/CategoryCard";
 import { Reveal } from "@/components/ui/Reveal";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Categories | Digital Software Solutions",
   description:

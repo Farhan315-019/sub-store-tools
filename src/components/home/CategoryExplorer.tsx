@@ -8,7 +8,7 @@ import {
   Wand,
   type LucideIcon,
 } from "lucide-react";
-import { getCategoriesWithCounts } from "@/data/products";
+import { getCategoriesWithCounts } from "@/lib/catalog";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/utils";

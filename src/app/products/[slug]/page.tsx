@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Clock, HelpCircle, MessageCircle, ShieldCheck, Truck } from "lucide-react";
-import { allProducts, getProductBySlug, getRelatedProducts } from "@/data/products";
+import { getCatalogProducts, getProductBySlug, getRelatedProducts } from "@/lib/catalog";
 import { getCategoryBySlug } from "@/data/categories";
 import { productFaq } from "@/data/faq";
 import { siteConfig } from "@/config/site";
@@ -21,8 +21,10 @@ type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
-  return allProducts.map((product) => ({ slug: product.slug }));
+  return getCatalogProducts().map((product) => ({ slug: product.slug }));
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {

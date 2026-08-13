@@ -2,8 +2,9 @@
 
 import { ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { allProducts, getCategoriesWithCounts } from "@/data/products";
+import { useEffect, useMemo, useState } from "react";
+import type { Product } from "@/types";
+import { categories } from "@/data/categories";
 import { getCategoryColor } from "@/lib/categoryColors";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProductCard } from "@/components/products/ProductCard";
@@ -12,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 const filterOptions = [
   { label: "All", value: "all", color: null },
-  ...getCategoriesWithCounts().map((category) => ({
+  ...categories.map((category) => ({
     label: category.name,
     value: category.slug,
     color: getCategoryColor(category.slug),
@@ -26,13 +27,37 @@ type BrowseProductsProps = {
 };
 
 export function BrowseProducts({ hideHeading = false, limit, pageSize }: BrowseProductsProps) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState("");
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [visibleCount, setVisibleCount] = useState(pageSize ?? Infinity);
 
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/store/products", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json: { products?: Product[] }) => {
+        if (!cancelled) {
+          setProducts(json.products ?? []);
+          setLoaded(true);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setLoadError("Could not load products. Please try again.");
+          setLoaded(true);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const matches = useMemo(() => {
     const term = query.trim().toLowerCase();
-    return allProducts.filter((product) => {
+    return products.filter((product) => {
       const matchesCategory = filter === "all" || product.categorySlug === filter;
       if (!matchesCategory) return false;
       if (!term) return true;
@@ -41,9 +66,9 @@ export function BrowseProducts({ hideHeading = false, limit, pageSize }: BrowseP
         .toLowerCase()
         .includes(term);
     });
-  }, [query, filter]);
+  }, [products, query, filter]);
 
-  const products = limit ? matches.slice(0, limit) : matches.slice(0, visibleCount);
+  const shown = limit ? matches.slice(0, limit) : matches.slice(0, visibleCount);
   const hasMore =
     (typeof limit === "number" && matches.length > limit) ||
     (typeof pageSize === "number" && matches.length > visibleCount);
@@ -100,7 +125,11 @@ export function BrowseProducts({ hideHeading = false, limit, pageSize }: BrowseP
       </div>
 
       <div className="mt-10">
-        {products.length === 0 ? (
+        {!loaded ? (
+          <p className="py-10 text-center text-sm text-muted">Loading products...</p>
+        ) : loadError ? (
+          <EmptyState message={loadError} hint="Refresh the page to try again." />
+        ) : shown.length === 0 ? (
           <EmptyState
             message="No products match your search"
             hint="Try a different keyword or clear the category filter."
@@ -108,11 +137,11 @@ export function BrowseProducts({ hideHeading = false, limit, pageSize }: BrowseP
         ) : (
           <>
             <p className="mb-5 text-sm text-muted" aria-live="polite">
-              Showing {products.length} product{products.length === 1 ? "" : "s"}
+              Showing {shown.length} product{shown.length === 1 ? "" : "s"}
               {hasMore ? ` of ${matches.length}` : ""}
             </p>
             <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-5">
-              {products.map((product) => (
+              {shown.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
@@ -129,7 +158,7 @@ export function BrowseProducts({ hideHeading = false, limit, pageSize }: BrowseP
                       <ArrowRight className="size-4" aria-hidden="true" />
                     </Link>
                     <p className="mt-3 text-xs text-muted-2">
-                      Browse the complete catalogue of {allProducts.length} products on the products page.
+                      Browse the complete catalogue of {products.length} products on the products page.
                     </p>
                   </>
                 ) : (
