@@ -8,9 +8,8 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { searchProducts } from "@/data/products";
+import type { Product } from "@/types";
 import { getCategoryBySlug } from "@/data/categories";
 import { cn } from "@/lib/utils";
 import { ProductIcon } from "@/components/products/ProductIcon";
@@ -25,10 +24,54 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [products, setProducts] = useState<Product[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const results = useMemo(() => searchProducts(query), [query]);
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    fetch("/api/store/products", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json: { products?: Product[] }) => {
+        if (!cancelled && Array.isArray(json.products)) {
+          setProducts(json.products);
+        }
+      })
+      .catch(() => {
+        // keep whatever we have on failure
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
+
+  const results = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    if (!term) return [];
+    return products
+      .filter((product) => {
+        const haystack = [
+          product.name,
+          product.category,
+          product.categorySlug,
+          product.shortDescription,
+          product.description,
+          ...product.features,
+        ]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(term);
+      })
+      .sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+        if (aName.startsWith(term) && !bName.startsWith(term)) return -1;
+        if (bName.startsWith(term) && !aName.startsWith(term)) return 1;
+        return aName.localeCompare(bName);
+      })
+      .slice(0, 12);
+  }, [products, query]);
   const safeActiveIndex = Math.min(activeIndex, Math.max(0, results.length - 1));
 
   const handleClose = useCallback(() => {
@@ -73,30 +116,19 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
     }
   };
 
-  return (    <AnimatePresence>
-      {open ? (
-        <motion.div
-          className="fixed inset-0 z-[100] flex items-start justify-center p-3 pt-[12vh] sm:p-6 sm:pt-[14vh]"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Search products"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
-        >
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={handleClose}
-            aria-hidden="true"
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97, y: -12 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97, y: -12 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex max-h-[76vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-border bg-background-elevated shadow-lift"
-          >
+  return open ? (
+    <div
+      className="fixed inset-0 z-[100] flex items-start justify-center p-3 pt-[12vh] sm:p-6 sm:pt-[14vh]"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search products"
+    >
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-[fade-in_0.18s_ease-out]"
+        onClick={handleClose}
+        aria-hidden="true"
+      />
+      <div className="relative flex max-h-[76vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-border bg-background-elevated shadow-lift animate-[fade-slide-in_0.22s_cubic-bezier(0.22,1,0.36,1)]">
             <div className="flex items-center gap-3 border-b border-border px-4">
               <Search className="size-4 shrink-0 text-muted" aria-hidden="true" />
               <input
@@ -197,9 +229,7 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
                 Close
               </button>
             </div>
-          </motion.div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
-  );
+          </div>
+    </div>
+  ) : null;
 }

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   ChevronDown,
@@ -19,10 +18,11 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BrandLogo } from "./BrandLogo";
 import { useSearch } from "@/components/search/SearchProvider";
 import { useTheme } from "./ThemeProvider";
+import type { Product } from "@/types";
 import { allProducts } from "@/data/products";
 import { categories } from "@/data/categories";
 import { getCategoryColor } from "@/lib/categoryColors";
@@ -46,20 +46,42 @@ const categoryIcons: Record<string, LucideIcon> = {
   "editing-software": Wand,
 };
 
-const groupedProducts = categories.map((category) => ({
-  category,
-  products: allProducts.filter((product) => product.categorySlug === category.slug),
-}));
-
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(categories[0].slug);
   const [allProductsOpen, setAllProductsOpen] = useState(false);
+  const [catalogProducts, setCatalogProducts] = useState<Product[]>(allProducts);
   const pathname = usePathname();
   const { open: openSearch } = useSearch();
   const { theme, toggle } = useTheme();
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/store/products", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json: { products?: Product[] }) => {
+        if (!cancelled && Array.isArray(json.products)) {
+          setCatalogProducts(json.products);
+        }
+      })
+      .catch(() => {
+        // keep the static fallback if the store is unavailable
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const groupedProducts = useMemo(
+    () =>
+      categories.map((category) => ({
+        category,
+        products: catalogProducts.filter((product) => product.categorySlug === category.slug),
+      })),
+    [catalogProducts]
+  );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -140,18 +162,16 @@ export function Header() {
                       />
                     </Link>
 
-                    <AnimatePresence>
-                      {productsOpen ? (
-                        <motion.div
-                          key="products-mega-menu"
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                          className="absolute inset-x-0 top-full z-50 pt-3"
-                          role="dialog"
-                          aria-label="All products catalogue"
-                        >
+                    <div
+                      className={cn(
+                        "absolute inset-x-0 top-full z-50 pt-3 transition-all duration-200 ease-out",
+                        productsOpen
+                          ? "visible translate-y-0 opacity-100"
+                          : "invisible -translate-y-2 opacity-0"
+                      )}
+                      role="dialog"
+                      aria-label="All products catalogue"
+                    >
                           <div className="container-x">
                           <div className="overflow-hidden rounded-2xl border border-border bg-background-elevated shadow-lift">
                             <div className="grid lg:grid-cols-[17rem_1fr]">
@@ -166,7 +186,7 @@ export function Header() {
                                     All Products
                                   </span>
                                   <span className="text-xs font-medium text-muted">
-                                    {allProducts.length}
+                                    {catalogProducts.length}
                                   </span>
                                 </Link>
 
@@ -280,9 +300,7 @@ export function Header() {
                             </div>
                           </div>
                           </div>
-                        </motion.div>
-                      ) : null}
-                    </AnimatePresence>
+                    </div>
                   </div>
                 );
               }
@@ -359,27 +377,19 @@ export function Header() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {menuOpen ? (
-          <>
-            <motion.div
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMenuOpen(false)}
-              aria-hidden="true"
-            />
-            <motion.div
-              className="fixed inset-y-0 right-0 z-50 flex w-[min(85vw,22rem)] flex-col bg-background-elevated shadow-lift lg:hidden"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Mobile navigation"
-            >
+      {menuOpen ? (
+        <>
+          <div
+            className="fixed inset-0 z-40 animate-[fade-in_0.25s_ease-out] bg-black/60 backdrop-blur-sm lg:hidden"
+            onClick={() => setMenuOpen(false)}
+            aria-hidden="true"
+          />
+          <div
+            className="fixed inset-y-0 right-0 z-50 flex w-[min(85vw,22rem)] flex-col bg-background-elevated shadow-lift lg:hidden animate-[drawer-in_0.3s_cubic-bezier(0.22,1,0.36,1)]"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+          >
               <div className="flex h-16 items-center justify-between border-b border-border px-5">
                 <BrandLogo />
                 <button
@@ -396,11 +406,10 @@ export function Header() {
                 {navItems.map((item, index) => {
                   const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                   return (
-                    <motion.div
+                    <div
                       key={item.href}
-                      initial={{ opacity: 0, x: 16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 * index, duration: 0.25 }}
+                      className="animate-[fade-slide-up-in_0.25s_ease-out_both]"
+                      style={{ animationDelay: `${0.05 * index}s` }}
                     >
                       <Link
                         href={item.href}
@@ -416,15 +425,13 @@ export function Header() {
                         {item.label}
                         <ArrowRight className="size-4 text-muted" aria-hidden="true" />
                       </Link>
-                    </motion.div>
+                    </div>
                   );
                 })}
 
-                <motion.div
-                  initial={{ opacity: 0, x: 16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 * navItems.length, duration: 0.25 }}
-                  className="mt-1 border-t border-border pt-2"
+                <div
+                  className="mt-1 animate-[fade-slide-up-in_0.25s_ease-out_both] border-t border-border pt-2"
+                  style={{ animationDelay: `${0.05 * navItems.length}s` }}
                 >
                   <button
                     type="button"
@@ -445,47 +452,44 @@ export function Header() {
                     />
                   </button>
 
-                  <AnimatePresence initial={false}>
-                    {allProductsOpen ? (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                        className="overflow-hidden"
-                      >
-                        {groupedProducts.map(({ category, products }) => {
-                          const color = getCategoryColor(category.slug);
-                          return (
-                            <div key={category.slug} className="px-4 py-3">
-                              <Link
-                                href={`/categories/${category.slug}`}
-                                onClick={() => setMenuOpen(false)}
-                                className="inline-flex items-center gap-2 text-sm font-semibold text-foreground"
-                              >
-                                <span className={cn("size-2 rounded-full", color.dot)} aria-hidden="true" />
-                                {category.name}
-                              </Link>
-                              <ul className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1">
-                                {products.map((product) => (
-                                  <li key={product.id}>
-                                    <Link
-                                      href={`/products/${product.slug}`}
-                                      onClick={() => setMenuOpen(false)}
-                                      className="block truncate py-0.5 text-[0.8rem] text-muted transition-colors hover:text-foreground"
-                                    >
-                                      {product.name}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          );
-                        })}
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
-                </motion.div>
+                  <div
+                    className={cn(
+                      "grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                      allProductsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                    )}
+                  >
+                    <div className="overflow-hidden">
+                      {groupedProducts.map(({ category, products }) => {
+                        const color = getCategoryColor(category.slug);
+                        return (
+                          <div key={category.slug} className="px-4 py-3">
+                            <Link
+                              href={`/categories/${category.slug}`}
+                              onClick={() => setMenuOpen(false)}
+                              className="inline-flex items-center gap-2 text-sm font-semibold text-foreground"
+                            >
+                              <span className={cn("size-2 rounded-full", color.dot)} aria-hidden="true" />
+                              {category.name}
+                            </Link>
+                            <ul className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1">
+                              {products.map((product) => (
+                                <li key={product.id}>
+                                  <Link
+                                    href={`/products/${product.slug}`}
+                                    onClick={() => setMenuOpen(false)}
+                                    className="block truncate py-0.5 text-[0.8rem] text-muted transition-colors hover:text-foreground"
+                                  >
+                                    {product.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               </nav>
 
               <div className="grid grid-cols-2 gap-3 border-t border-border p-4">
@@ -504,10 +508,9 @@ export function Header() {
                   Become a Reseller
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </>
         ) : null}
-      </AnimatePresence>
     </header>
   );
 }

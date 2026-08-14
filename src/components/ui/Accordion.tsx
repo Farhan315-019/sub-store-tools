@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useId, useState } from "react";
 import type { ReactNode } from "react";
@@ -15,7 +14,6 @@ type AccordionItemProps = {
 export function AccordionItem({ question, answer, defaultOpen = false }: AccordionItemProps) {
   const [open, setOpen] = useState(defaultOpen);
   const id = useId();
-  const reduceMotion = useReducedMotion();
 
   return (
     <div className="rounded-2xl border border-border bg-surface transition-colors hover:border-border-strong">
@@ -40,22 +38,19 @@ export function AccordionItem({ question, answer, defaultOpen = false }: Accordi
           </span>
         </button>
       </h3>
-      <AnimatePresence initial={false}>
-        {open ? (
-          <motion.div
-            id={`${id}-panel`}
-            role="region"
-            aria-labelledby={`${id}-button`}
-            initial={reduceMotion ? false : { height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden"
-          >
-            <p className="px-5 pb-5 text-sm leading-relaxed text-muted sm:text-[0.95rem]">{answer}</p>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      <div
+        id={`${id}-panel`}
+        role="region"
+        aria-labelledby={`${id}-button`}
+        className={cn(
+          "grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        )}
+      >
+        <div className="overflow-hidden">
+          <p className="px-5 pb-5 text-sm leading-relaxed text-muted sm:text-[0.95rem]">{answer}</p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -54,6 +54,7 @@ type AdminAccount = {
   username: string;
   passwordHash: string;
   salt: string;
+  modified: boolean;
 };
 
 type DB = {
@@ -88,7 +89,7 @@ function defaultDB(): DB {
   const username = process.env.ADMIN_USERNAME?.trim() || "admin";
   const password = process.env.ADMIN_PASSWORD || "admin";
   return {
-    admin: { username, ...hashPassword(password) },
+    admin: { username, ...hashPassword(password), modified: false },
     sessions: [],
     sellers: [],
     products: allProducts,
@@ -138,9 +139,16 @@ export const store = {
       let verified =
         db.admin.username === username &&
         verifyPassword(password, db.admin.salt, db.admin.passwordHash);
-      if (!verified && envUsername && envPassword && username === envUsername && password === envPassword) {
+      if (
+        !verified &&
+        !db.admin.modified &&
+        envUsername &&
+        envPassword &&
+        username === envUsername &&
+        password === envPassword
+      ) {
         verified = true;
-        db.admin = { username: envUsername, ...hashPassword(envPassword) };
+        db.admin = { username: envUsername, ...hashPassword(envPassword), modified: true };
       }
       if (!verified) return null;
       const token = crypto.randomBytes(24).toString("hex");
@@ -162,12 +170,43 @@ export const store = {
     });
   },
 
-  changeAdminPassword(current: string, next: string): boolean {
+  getAdminUsername(): string {
+    return readDB().admin.username;
+  },
+
+  changeAdminCredentials(
+    current: string,
+    next: { username?: string; password?: string }
+  ): { ok: true } | { ok: false; error: string } {
     return mutate((db) => {
-      if (!verifyPassword(current, db.admin.salt, db.admin.passwordHash)) return false;
-      db.admin = { username: db.admin.username, ...hashPassword(next) };
-      return true;
+      if (!verifyPassword(current, db.admin.salt, db.admin.passwordHash)) {
+        return { ok: false, error: "Current password is incorrect." };
+      }
+      const username = next.username?.trim() ?? db.admin.username;
+      if (!/^[a-zA-Z0-9_.-]+$/.test(username)) {
+        return {
+          ok: false,
+          error: "Username can only contain letters, numbers, dots, dashes and underscores.",
+        };
+      }
+      const updated: AdminAccount = {
+        username,
+        passwordHash: db.admin.passwordHash,
+        salt: db.admin.salt,
+        modified: true,
+      };
+      if (next.password) {
+        const hashed = hashPassword(next.password);
+        updated.passwordHash = hashed.passwordHash;
+        updated.salt = hashed.salt;
+      }
+      db.admin = updated;
+      return { ok: true };
     });
+  },
+
+  changeAdminPassword(current: string, next: string): boolean {
+    return this.changeAdminCredentials(current, { password: next }).ok;
   },
 
   getProducts(): Product[] {
